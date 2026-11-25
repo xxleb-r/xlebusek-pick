@@ -1,0 +1,575 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="XLEBUSEK PICK — умный помощник для выбора и сравнения товаров по бюджету, характеристикам и вашим требованиям.">
+<meta name="theme-color" content="#090e1b">
+<title>XLEBUSEK PICK — умный выбор</title>
+
+<style>
+:root {
+  --bg:#090e1b;
+  --panel:#121b2d;
+  --panel2:#19253b;
+  --blue:#438cff;
+  --cyan:#36d9d0;
+  --text:#f4f7ff;
+  --muted:#9baac2;
+  --border:#283752;
+  --green:#40d69a;
+  --red:#ff687b;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+  line-height:1.55;
+}
+button,input,textarea,select {font:inherit}
+button {cursor:pointer}
+header {
+  padding:22px 6%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--border);
+  background:#0d1525;
+}
+.logo {
+  font-size:23px;
+  font-weight:900;
+  color:var(--blue);
+  letter-spacing:1px;
+}
+.logo span {color:white}
+nav {display:flex;gap:18px;flex-wrap:wrap}
+nav a {
+  color:var(--muted);
+  text-decoration:none;
+  font-size:14px;
+}
+nav a:hover {color:white}
+.container {
+  width:min(1050px,92%);
+  margin:auto;
+}
+.hero {
+  text-align:center;
+  padding:65px 10px 35px;
+}
+.hero h1 {
+  font-size:clamp(34px,7vw,57px);
+  margin:0 0 12px;
+  letter-spacing:-2px;
+}
+.hero h1 span {color:var(--blue)}
+.hero p {
+  color:var(--muted);
+  max-width:650px;
+  margin:0 auto;
+}
+.section {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:25px;
+  margin:22px 0;
+}
+.section h2 {margin-top:0;font-size:22px}
+.small {color:var(--muted);font-size:13px}
+label {
+  display:block;
+  color:#cbd6e8;
+  margin:13px 0 7px;
+  font-size:14px;
+}
+input,textarea,select {
+  width:100%;
+  padding:13px;
+  background:#0b1424;
+  color:white;
+  border:1px solid var(--border);
+  border-radius:10px;
+  outline:none;
+}
+input:focus,textarea:focus,select:focus {
+  border-color:var(--blue);
+}
+textarea {min-height:90px;resize:vertical}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:15px;
+}
+.btn {
+  border:0;
+  padding:12px 18px;
+  border-radius:10px;
+  color:white;
+  background:var(--blue);
+  font-weight:bold;
+  transition:.2s;
+}
+.btn:hover {filter:brightness(1.15)}
+.btn.secondary {
+  background:var(--panel2);
+  border:1px solid var(--border);
+}
+.btn.danger {background:#8d3042}
+.btn.green {background:#168b69}
+.actions {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:17px;
+}
+.product {
+  padding:18px;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:13px;
+  margin:14px 0;
+}
+.product h3 {margin:0 0 8px}
+.product-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.product-score {
+  color:var(--cyan);
+  font-size:20px;
+  font-weight:bold;
+}
+.result-card {
+  background:#10283a;
+  border:1px solid #24546a;
+  padding:20px;
+  border-radius:14px;
+  margin:15px 0;
+}
+.result-card h3 {margin-top:0}
+.score {
+  height:10px;
+  background:#28364c;
+  border-radius:10px;
+  overflow:hidden;
+  margin:10px 0;
+}
+.score div {
+  height:100%;
+  background:linear-gradient(90deg,var(--blue),var(--cyan));
+}
+.tag {
+  display:inline-block;
+  padding:5px 9px;
+  background:#263b5b;
+  border-radius:7px;
+  font-size:12px;
+  margin:3px;
+}
+.good {color:var(--green)}
+.bad {color:var(--red)}
+.empty {
+  text-align:center;
+  padding:25px;
+  color:var(--muted);
+}
+footer {
+  text-align:center;
+  color:var(--muted);
+  padding:35px 15px;
+  font-size:13px;
+}
+.hidden {display:none!important}
+a {color:#78b5ff}
+@media(max-width:650px) {
+  header {align-items:flex-start;gap:12px;flex-direction:column}
+  .grid,.product-grid {grid-template-columns:1fr}
+  .section {padding:17px}
+  .hero {padding-top:45px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">XLEBUSEK <span>PICK</span></div>
+  <nav>
+    <a href="#search">Подбор</a>
+    <a href="#products">Товары</a>
+    <a href="#comparison">Сравнение</a>
+    <a href="#about">О проекте</a>
+  </nav>
+</header>
+
+<div class="container">
+
+<section class="hero">
+  <h1>Выбирай <span>умнее.</span></h1>
+  <p>
+    XLEBUSEK PICK помогает находить подходящие товары,
+    сравнивать характеристики и принимать более обоснованные решения.
+  </p>
+</section>
+
+<section class="section" id="search">
+  <h2>01. Что тебе нужно?</h2>
+  <p class="small">Расскажи о своей задаче — мы поможем оценить подходящие варианты.</p>
+
+  <label for="task">Что хочешь приобрести?</label>
+  <input id="task" placeholder="Например: ноутбук для учёбы и игр">
+
+  <div class="grid">
+    <div>
+      <label for="budget">Твой бюджет (₽)</label>
+      <input id="budget" type="number" min="0" placeholder="50000">
+    </div>
+    <div>
+      <label for="priority">Главный приоритет</label>
+      <select id="priority">
+        <option value="balanced">Баланс цены и качества</option>
+        <option value="price">Самая низкая цена</option>
+        <option value="quality">Максимальное качество</option>
+        <option value="performance">Производительность</option>
+        <option value="reliability">Надёжность</option>
+      </select>
+    </div>
+  </div>
+
+  <label for="requirements">Твои требования</label>
+  <textarea id="requirements" placeholder="Например: 16 ГБ оперативной памяти, SSD от 512 ГБ, хорошая батарея..."></textarea>
+
+  <button class="btn" onclick="saveTask()">Сохранить требования</button>
+  <p class="small" id="taskStatus"></p>
+</section>
+
+<section class="section" id="products">
+  <h2>02. Добавь товары</h2>
+  <p class="small">Введи информацию о товарах, которые хочешь сравнить.</p>
+
+  <div class="grid">
+    <div>
+      <label for="pname">Название товара</label>
+      <input id="pname" placeholder="Например: Ноутбук ASUS">
+    </div>
+    <div>
+      <label for="pprice">Цена (₽)</label>
+      <input id="pprice" type="number" min="0" placeholder="45000">
+    </div>
+  </div>
+
+  <label for="plink">Ссылка на товар (необязательно)</label>
+  <input id="plink" type="url" placeholder="https://example.com/product">
+
+  <label for="pspecs">Характеристики</label>
+  <textarea id="pspecs" placeholder="Например: 16 ГБ RAM, SSD 512 ГБ, экран 15.6 дюйма"></textarea>
+
+  <div class="grid">
+    <div>
+      <label for="ppros">Преимущества</label>
+      <textarea id="ppros" placeholder="Хороший экран, лёгкий корпус..."></textarea>
+    </div>
+    <div>
+      <label for="pcons">Недостатки</label>
+      <textarea id="pcons" placeholder="Слабая батарея, шумный вентилятор..."></textarea>
+    </div>
+  </div>
+
+  <button class="btn" onclick="addProduct()">+ Добавить товар</button>
+  <button class="btn secondary" onclick="addDemo()">Добавить пример</button>
+
+  <div id="productList"></div>
+</section>
+
+<section class="section" id="comparison">
+  <h2>03. Сравнение и рекомендации</h2>
+  <p class="small">
+    Оценка строится по указанным тобой данным. Это ориентировочный расчёт,
+    а не независимая проверка качества товара.
+  </p>
+
+  <button class="btn green" onclick="compareProducts()">Сравнить товары</button>
+  <div id="results">
+    <div class="empty">Добавь хотя бы два товара, чтобы начать сравнение.</div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <h2>О XLEBUSEK PICK</h2>
+  <p>
+    XLEBUSEK PICK — помощник для осознанного выбора товаров.
+    Он позволяет учитывать личные требования, бюджет, характеристики,
+    преимущества и недостатки разных вариантов.
+  </p>
+  <p class="small">
+    Сервис не является магазином и не гарантирует достоверность
+    информации, введённой пользователями. Перед покупкой проверяй
+    характеристики, цену и условия продажи на сайте продавца.
+  </p>
+</section>
+
+</div>
+
+<footer>
+  <div class="logo">XLEBUSEK <span>PICK</span></div>
+  <p>Умный выбор начинается здесь.</p>
+  <p>© 2026 XLEBUSEK PICK</p>
+  <p>Первая версия сервиса</p>
+</footer>
+
+<script>
+let products = [];
+let taskData = {
+  task:"",
+  budget:0,
+  priority:"balanced",
+  requirements:""
+};
+
+function loadData() {
+  try {
+    const savedProducts = localStorage.getItem("xpick_products");
+    const savedTask = localStorage.getItem("xpick_task");
+
+    if(savedProducts) products = JSON.parse(savedProducts);
+    if(savedTask) {
+      taskData = JSON.parse(savedTask);
+      document.getElementById("task").value = taskData.task || "";
+      document.getElementById("budget").value = taskData.budget || "";
+      document.getElementById("priority").value = taskData.priority || "balanced";
+      document.getElementById("requirements").value = taskData.requirements || "";
+    }
+  } catch(e) {
+    products = [];
+  }
+  renderProducts();
+}
+
+function saveProducts() {
+  localStorage.setItem("xpick_products",JSON.stringify(products));
+}
+
+function saveTask() {
+  taskData = {
+    task:document.getElementById("task").value.trim(),
+    budget:Number(document.getElementById("budget").value) || 0,
+    priority:document.getElementById("priority").value,
+    requirements:document.getElementById("requirements").value.trim()
+  };
+
+  localStorage.setItem("xpick_task",JSON.stringify(taskData));
+  document.getElementById("taskStatus").textContent = "Требования сохранены!";
+}
+
+function addProduct() {
+  const name = document.getElementById("pname").value.trim();
+  const price = Number(document.getElementById("pprice").value);
+
+  if(!name) {
+    alert("Введи название товара.");
+    return;
+  }
+  if(!Number.isFinite(price) || price < 0) {
+    alert("Укажи корректную цену.");
+    return;
+  }
+
+  const link = document.getElementById("plink").value.trim();
+
+  if(link) {
+    try {
+      const parsed = new URL(link);
+      if(!["http:","https:"].includes(parsed.protocol)) throw new Error();
+    } catch(e) {
+      alert("Укажи корректную ссылку, начинающуюся с https://");
+      return;
+    }
+  }
+
+  products.push({
+    id:Date.now() + Math.random(),
+    name,
+    price,
+    link,
+    specs:document.getElementById("pspecs").value.trim(),
+    pros:document.getElementById("ppros").value.trim(),
+    cons:document.getElementById("pcons").value.trim()
+  });
+
+  saveProducts();
+  renderProducts();
+
+  ["pname","pprice","plink","pspecs","ppros","pcons"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+}
+
+function addDemo() {
+  products.push({
+    id:Date.now()+Math.random(),
+    name:"Пример ноутбука",
+    price:45000,
+    link:"",
+    specs:"16 ГБ RAM, SSD 512 ГБ, экран 15.6 дюйма",
+    pros:"Небольшой вес, быстрый SSD",
+    cons:"Средняя автономность"
+  });
+  saveProducts();
+  renderProducts();
+}
+
+function removeProduct(id) {
+  products = products.filter(p => p.id !== id);
+  saveProducts();
+  renderProducts();
+  document.getElementById("results").innerHTML =
+    '<div class="empty">Нажми «Сравнить товары», чтобы получить новую оценку.</div>';
+}
+
+function safeText(value) {
+  return String(value || "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[ch]));
+}
+
+function renderProducts() {
+  const box = document.getElementById("productList");
+
+  if(!products.length) {
+    box.innerHTML = '<div class="empty">Пока товаров нет.</div>';
+    return;
+  }
+
+  box.innerHTML = products.map(p => `
+    <div class="product">
+      <h3>${safeText(p.name)}</h3>
+      <div class="product-score">${p.price.toLocaleString("ru-RU")} ₽</div>
+      <p>${safeText(p.specs)}</p>
+      ${p.link ? `<p><a href="${safeText(p.link)}" target="_blank" rel="noopener noreferrer">Открыть товар ↗</a></p>` : ""}
+      <p class="small"><span class="good">Плюсы:</span> ${safeText(p.pros || "Не указаны")}</p>
+      <p class="small"><span class="bad">Минусы:</span> ${safeText(p.cons || "Не указаны")}</p>
+      <button class="btn danger" onclick="removeProduct(${p.id})">Удалить</button>
+    </div>
+  `).join("");
+}
+
+function getScore(p) {
+  let score = 50;
+  const budget = taskData.budget;
+  const specs = (p.specs + " " + p.pros + " " + p.cons).toLowerCase();
+
+  if(budget > 0) {
+    if(p.price <= budget) {
+      score += 25;
+      const ratio = p.price / budget;
+      if(ratio < 0.8) score += 5;
+    } else {
+      const over = (p.price - budget) / budget;
+      score -= Math.min(35,over * 50);
+    }
+  }
+
+  const requirements = taskData.requirements.toLowerCase();
+  const words = requirements.match(/[а-яёa-z0-9]{3,}/gi) || [];
+  let matched = 0;
+
+  words.forEach(word => {
+    if(specs.includes(word)) matched++;
+  });
+
+  if(words.length) {
+    score += (matched / words.length) * 20;
+  }
+
+  if(taskData.priority === "price" && products.length > 1) {
+    const cheapest = Math.min(...products.map(x => x.price));
+    if(p.price === cheapest) score += 10;
+  }
+
+  if(taskData.priority === "quality") {
+    if(p.pros) score += 5;
+    if(p.cons) score -= 2;
+  }
+
+  if(taskData.priority === "reliability") {
+    if(/гарант|надёж|надеж|прочн|качеств/.test(specs)) score += 8;
+  }
+
+  if(taskData.priority === "performance") {
+    if(/процессор|ядр|гб|ssd|видеокарт|частот/.test(specs)) score += 8;
+  }
+
+  if(p.cons) score -= 3;
+  if(p.pros) score += 3;
+
+  return Math.max(0,Math.min(100,Math.round(score)));
+}
+
+function compareProducts() {
+  saveTask();
+
+  const results = document.getElementById("results");
+
+  if(products.length < 2) {
+    results.innerHTML = '<div class="empty">Добавь минимум два товара для сравнения.</div>';
+    return;
+  }
+
+  const sorted = products.map(p => ({
+    ...p,
+    score:getScore(p)
+  })).sort((a,b) => b.score-a.score);
+
+  const winner = sorted[0];
+
+  let html = `
+    <div class="result-card">
+      <h3>🏆 Наиболее подходящий вариант</h3>
+      <h2>${safeText(winner.name)}</h2>
+      <div class="product-score">${winner.score}/100 баллов</div>
+      <p>Цена: ${winner.price.toLocaleString("ru-RU")} ₽</p>
+      <p>Это лидер по нашей ориентировочной оценке на основе введённых данных.</p>
+      ${winner.link ? `<a href="${safeText(winner.link)}" target="_blank" rel="noopener noreferrer">Посмотреть товар ↗</a>` : ""}
+    </div>
+    <h3>Рейтинг товаров</h3>
+  `;
+
+  sorted.forEach((p,i) => {
+    html += `
+      <div class="product">
+        <h3>${i+1}. ${safeText(p.name)}</h3>
+        <div class="product-score">${p.score}/100</div>
+        <div class="score"><div style="width:${p.score}%"></div></div>
+        <p>Цена: ${p.price.toLocaleString("ru-RU")} ₽</p>
+        <p class="small">Характеристики: ${safeText(p.specs || "Не указаны")}</p>
+        <p class="small"><span class="good">Преимущества:</span> ${safeText(p.pros || "Не указаны")}</p>
+        <p class="small"><span class="bad">Недостатки:</span> ${safeText(p.cons || "Не указаны")}</p>
+      </div>
+    `;
+  });
+
+  html += `
+    <p class="small">
+      Важно: оценка является приблизительной. Сервис пока не проверяет
+      характеристики и отзывы в магазинах самостоятельно.
+    </p>
+  `;
+
+  results.innerHTML = html;
+}
+
+loadData();
+</script>
+
+</body>
+</html>
