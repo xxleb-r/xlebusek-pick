@@ -267,6 +267,8 @@ a {color:#78b5ff}
     <button class="btn" onclick="searchMarket('mvideo')">Искать в М.Видео</button>
     <button class="btn" onclick="searchMarket('citilink')">Искать в Ситилинке</button>
     <button class="btn" onclick="searchMarket('aliexpress')">Искать на AliExpress</button>
+    <button class="btn" onclick="searchMarket('eldorado')">Искать в Эльдорадо</button>
+    <button class="btn" onclick="searchMarket('youla')">Искать на Юле</button>
   </div>
   <p class="small" id="marketStatus">Поиск откроется на сайте магазина. Цены и наличие проверяй у продавца.</p>
 </section>
@@ -382,7 +384,9 @@ function searchMarket(store) {
     megamarket: "https://megamarket.ru/catalog/?q=" + encoded,
     mvideo: "https://www.mvideo.ru/product-list-page?q=" + encoded,
     citilink: "https://www.citilink.ru/search/?text=" + encoded,
-    aliexpress: "https://aliexpress.ru/wholesale?SearchText=" + encoded
+    aliexpress: "https://aliexpress.ru/wholesale?SearchText=" + encoded,
+    eldorado: "https://www.eldorado.ru/",
+    youla: "https://youla.ru/all?q=" + encoded
   };
 
   if (!urls[store]) return;
