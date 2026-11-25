@@ -262,6 +262,11 @@ a {color:#78b5ff}
     <button class="btn" onclick="searchMarket('wb')">Искать на Wildberries</button>
     <button class="btn" onclick="searchMarket('ym')">Искать на Яндекс Маркете</button>
     <button class="btn" onclick="searchMarket('dns')">Искать в DNS</button>
+    <button class="btn" onclick="searchMarket('avito')">Искать на Avito</button>
+    <button class="btn" onclick="searchMarket('megamarket')">Искать на Мегамаркете</button>
+    <button class="btn" onclick="searchMarket('mvideo')">Искать в М.Видео</button>
+    <button class="btn" onclick="searchMarket('citilink')">Искать в Ситилинке</button>
+    <button class="btn" onclick="searchMarket('aliexpress')">Искать на AliExpress</button>
   </div>
   <p class="small" id="marketStatus">Поиск откроется на сайте магазина. Цены и наличие проверяй у продавца.</p>
 </section>
@@ -372,7 +377,12 @@ function searchMarket(store) {
     ozon: "https://www.ozon.ru/search/?text=" + encoded,
     wb: "https://www.wildberries.ru/catalog/0/search.aspx?search=" + encoded,
     ym: "https://market.yandex.ru/search?text=" + encoded,
-    dns: "https://www.dns-shop.ru/search/?q=" + encoded
+    dns: "https://www.dns-shop.ru/search/?q=" + encoded,
+    avito: "https://www.avito.ru/rossiya?q=" + encoded,
+    megamarket: "https://megamarket.ru/catalog/?q=" + encoded,
+    mvideo: "https://www.mvideo.ru/product-list-page?q=" + encoded,
+    citilink: "https://www.citilink.ru/search/?text=" + encoded,
+    aliexpress: "https://aliexpress.ru/wholesale?SearchText=" + encoded
   };
 
   if (!urls[store]) return;
