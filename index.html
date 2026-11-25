@@ -291,6 +291,32 @@ a {color:#78b5ff}
   <label for="plink">Ссылка на товар (необязательно)</label>
   <input id="plink" type="url" placeholder="https://example.com/product">
 
+  <div class="grid">
+    <div>
+      <label for="pstore">Магазин</label>
+      <select id="pstore">
+        <option value="">Не указан</option>
+        <option>Ozon</option>
+        <option>Wildberries</option>
+        <option>Яндекс Маркет</option>
+        <option>DNS</option>
+        <option>Авито</option>
+        <option>Мегамаркет</option>
+        <option>М.Видео</option>
+        <option>Ситилинк</option>
+        <option>AliExpress</option>
+        <option>Эльдорадо</option>
+        <option>Юла</option>
+        <option>Другой магазин</option>
+      </select>
+    </div>
+    <div>
+      <label for="pdelivery">Ожидаемая дата доставки</label>
+      <input id="pdelivery" type="date">
+    </div>
+  </div>
+  <p class="small">Укажи дату из условий доставки магазина. Сервис пока не получает её автоматически.</p>
+
   <label for="pspecs">Характеристики</label>
   <textarea id="pspecs" placeholder="Например: 16 ГБ RAM, SSD 512 ГБ, экран 15.6 дюйма"></textarea>
 
@@ -460,6 +486,8 @@ function addProduct() {
     name,
     price,
     link,
+    store:document.getElementById("pstore").value,
+    delivery:document.getElementById("pdelivery").value,
     specs:document.getElementById("pspecs").value.trim(),
     pros:document.getElementById("ppros").value.trim(),
     cons:document.getElementById("pcons").value.trim()
@@ -468,7 +496,7 @@ function addProduct() {
   saveProducts();
   renderProducts();
 
-  ["pname","pprice","plink","pspecs","ppros","pcons"].forEach(id => {
+  ["pname","pprice","plink","pstore","pdelivery","pspecs","ppros","pcons"].forEach(id => {
     document.getElementById(id).value = "";
   });
 }
@@ -517,6 +545,8 @@ function renderProducts() {
     <div class="product">
       <h3>${safeText(p.name)}</h3>
       <div class="product-score">${p.price.toLocaleString("ru-RU")} ₽</div>
+      <p class="small"><strong>Магазин:</strong> ${safeText(p.store || "Не указан")}</p>
+      <p class="small"><strong>Ожидаемая доставка:</strong> ${p.delivery ? safeText(new Date(p.delivery + "T00:00:00").toLocaleDateString("ru-RU")) : "Дата не указана"}</p>
       <p>${safeText(p.specs)}</p>
       ${p.link ? `<p><a href="${safeText(p.link)}" target="_blank" rel="noopener noreferrer">Открыть товар ↗</a></p>` : ""}
       <p class="small"><span class="good">Плюсы:</span> ${safeText(p.pros || "Не указаны")}</p>
