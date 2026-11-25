@@ -203,7 +203,7 @@ a {color:#78b5ff}
   <nav>
     <a href="#search">Подбор</a>
     <a href="#products">Товары</a>
-    <a href="#marketSearch">Поиск магазинов</a>
+    <a href="#products">Каталог</a>
     <a href="#comparison">Сравнение</a>
     <a href="#about">О проекте</a>
   </nav>
@@ -250,32 +250,44 @@ a {color:#78b5ff}
   <p class="small" id="taskStatus"></p>
 </section>
 
-<section class="section" id="marketSearch">
-  <h2>02. Поиск товаров в магазинах</h2>
-  <p class="small">Введи название товара и при желании бюджет. Откроем поиск в выбранном магазине.</p>
-  <label for="marketQuery">Что ищем?</label>
-  <input id="marketQuery" type="search" placeholder="Например: Samsung Galaxy A55">
-  <label for="marketBudget">Максимальный бюджет (₽), необязательно</label>
-  <input id="marketBudget" type="number" min="0" placeholder="30000">
-  <div class="actions">
-    <button class="btn" onclick="searchMarket('ozon')">Искать на Ozon</button>
-    <button class="btn" onclick="searchMarket('wb')">Искать на Wildberries</button>
-    <button class="btn" onclick="searchMarket('ym')">Искать на Яндекс Маркете</button>
-    <button class="btn" onclick="searchMarket('dns')">Искать в DNS</button>
-    <button class="btn" onclick="searchMarket('avito')">Искать на Avito</button>
-    <button class="btn" onclick="searchMarket('megamarket')">Искать на Мегамаркете</button>
-    <button class="btn" onclick="searchMarket('mvideo')">Искать в М.Видео</button>
-    <button class="btn" onclick="searchMarket('citilink')">Искать в Ситилинке</button>
-    <button class="btn" onclick="searchMarket('aliexpress')">Искать на AliExpress</button>
-    <button class="btn" onclick="searchMarket('eldorado')">Искать в Эльдорадо</button>
-    <button class="btn" onclick="searchMarket('youla')">Искать на Юле</button>
-  </div>
-  <p class="small" id="marketStatus">Поиск откроется на сайте магазина. Цены и наличие проверяй у продавца.</p>
-</section>
-
 <section class="section" id="products">
-  <h2>02. Добавь товары</h2>
-  <p class="small">Введи информацию о товарах, которые хочешь сравнить.</p>
+  <h2>02. Единый каталог товаров</h2>
+  <p class="small">Все товары из разных магазинов собраны здесь. Выбирай магазин фильтром — страница никуда не перенаправляет.</p>
+  <div class="grid">
+    <div>
+      <label for="catalogSearch">Поиск по каталогу</label>
+      <input id="catalogSearch" type="search" placeholder="Название товара..." oninput="renderProducts()">
+    </div>
+    <div>
+      <label for="storeFilter">Магазин</label>
+      <select id="storeFilter" onchange="renderProducts()">
+        <option value="all">Все магазины</option>
+        <option value="Ozon">Ozon</option>
+        <option value="Wildberries">Wildberries</option>
+        <option value="Яндекс Маркет">Яндекс Маркет</option>
+        <option value="Авито">Авито</option>
+        <option value="DNS">DNS</option>
+        <option value="Мегамаркет">Мегамаркет</option>
+        <option value="М.Видео">М.Видео</option>
+        <option value="Ситилинк">Ситилинк</option>
+        <option value="AliExpress">AliExpress</option>
+        <option value="Эльдорадо">Эльдорадо</option>
+        <option value="Юла">Юла</option>
+        <option value="Другой магазин">Другой магазин</option>
+        <option value="__none">Магазин не указан</option>
+      </select>
+    </div>
+    <div>
+      <label for="priceSort">Сортировка</label>
+      <select id="priceSort" onchange="renderProducts()">
+        <option value="new">Сначала новые</option>
+        <option value="cheap">Сначала дешевле</option>
+        <option value="expensive">Сначала дороже</option>
+        <option value="name">По названию</option>
+      </select>
+    </div>
+  </div>
+  <p class="small" id="catalogCount" aria-live="polite"></p>
 
   <div class="grid">
     <div>
@@ -382,45 +394,6 @@ let taskData = {
   requirements:""
 };
 
-function searchMarket(store) {
-  const queryInput = document.getElementById("marketQuery");
-  const budgetInput = document.getElementById("marketBudget");
-  const query = queryInput.value.trim();
-  const budget = Number(budgetInput.value);
-
-  if (!query) {
-    document.getElementById("marketStatus").textContent = "Сначала введи название товара.";
-    queryInput.focus();
-    return;
-  }
-
-  if (budgetInput.value && (!Number.isFinite(budget) || budget < 0)) {
-    document.getElementById("marketStatus").textContent = "Проверь значение бюджета.";
-    return;
-  }
-
-  const searchText = query + (budget > 0 ? " до " + budget + " рублей" : "");
-  const encoded = encodeURIComponent(searchText);
-  const urls = {
-    ozon: "https://www.ozon.ru/search/?text=" + encoded,
-    wb: "https://www.wildberries.ru/catalog/0/search.aspx?search=" + encoded,
-    ym: "https://market.yandex.ru/search?text=" + encoded,
-    dns: "https://www.dns-shop.ru/search/?q=" + encoded,
-    avito: "https://www.avito.ru/rossiya?q=" + encoded,
-    megamarket: "https://megamarket.ru/catalog/?q=" + encoded,
-    mvideo: "https://www.mvideo.ru/product-list-page?q=" + encoded,
-    citilink: "https://www.citilink.ru/search/?text=" + encoded,
-    aliexpress: "https://aliexpress.ru/wholesale?SearchText=" + encoded,
-    eldorado: "https://www.eldorado.ru/",
-    youla: "https://youla.ru/all?q=" + encoded
-  };
-
-  if (!urls[store]) return;
-  document.getElementById("marketStatus").textContent =
-    "Открываем поиск. Проверь цену, характеристики и наличие на сайте магазина.";
-  window.open(urls[store], "_blank", "noopener,noreferrer");
-}
-
 function loadData() {
   try {
     const savedProducts = localStorage.getItem("xpick_products");
@@ -507,6 +480,8 @@ function addDemo() {
     name:"Пример ноутбука",
     price:45000,
     link:"",
+    store:"Ozon",
+    delivery:"",
     specs:"16 ГБ RAM, SSD 512 ГБ, экран 15.6 дюйма",
     pros:"Небольшой вес, быстрый SSD",
     cons:"Средняя автономность"
@@ -535,20 +510,38 @@ function safeText(value) {
 
 function renderProducts() {
   const box = document.getElementById("productList");
+  const search = (document.getElementById("catalogSearch")?.value || "").trim().toLowerCase();
+  const store = document.getElementById("storeFilter")?.value || "all";
+  const sort = document.getElementById("priceSort")?.value || "new";
 
-  if(!products.length) {
-    box.innerHTML = '<div class="empty">Пока товаров нет.</div>';
+  let visible = products.filter(p => {
+    const matchesSearch = !search || (String(p.name || "") + " " + String(p.specs || "")).toLowerCase().includes(search);
+    const matchesStore = store === "all" ||
+      (store === "__none" ? !p.store : (p.store || "") === store);
+    return matchesSearch && matchesStore;
+  });
+
+  if (sort === "cheap") visible.sort((a,b) => Number(a.price) - Number(b.price));
+  if (sort === "expensive") visible.sort((a,b) => Number(b.price) - Number(a.price));
+  if (sort === "name") visible.sort((a,b) => String(a.name).localeCompare(String(b.name), "ru"));
+  if (sort === "new") visible.sort((a,b) => Number(b.id) - Number(a.id));
+
+  const count = document.getElementById("catalogCount");
+  if (count) count.textContent = "Показано товаров: " + visible.length + " из " + products.length;
+
+  if(!visible.length) {
+    box.innerHTML = '<div class="empty">' + (products.length ? 'По выбранным фильтрам товары не найдены.' : 'Каталог пока пуст. Добавь первый товар ниже.') + '</div>';
     return;
   }
 
-  box.innerHTML = products.map(p => `
+  box.innerHTML = visible.map(p => `
     <div class="product">
       <h3>${safeText(p.name)}</h3>
-      <div class="product-score">${p.price.toLocaleString("ru-RU")} ₽</div>
-      <p class="small"><strong>Магазин:</strong> ${safeText(p.store || "Не указан")}</p>
+      <div class="product-score">${Number(p.price).toLocaleString("ru-RU")} ₽</div>
+      <p class="small"><strong>Магазин:</strong> <span class="tag">${safeText(p.store || "Не указан")}</span></p>
       <p class="small"><strong>Ожидаемая доставка:</strong> ${p.delivery ? safeText(new Date(p.delivery + "T00:00:00").toLocaleDateString("ru-RU")) : "Дата не указана"}</p>
       <p>${safeText(p.specs)}</p>
-      ${p.link ? `<p><a href="${safeText(p.link)}" target="_blank" rel="noopener noreferrer">Открыть товар ↗</a></p>` : ""}
+      ${p.link ? `<p><a href="${safeText(p.link)}" target="_blank" rel="noopener noreferrer">Открыть страницу товара ↗</a></p>` : ""}
       <p class="small"><span class="good">Плюсы:</span> ${safeText(p.pros || "Не указаны")}</p>
       <p class="small"><span class="bad">Минусы:</span> ${safeText(p.cons || "Не указаны")}</p>
       <button class="btn danger" onclick="removeProduct(${p.id})">Удалить</button>
