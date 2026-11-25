@@ -203,6 +203,7 @@ a {color:#78b5ff}
   <nav>
     <a href="#search">Подбор</a>
     <a href="#products">Товары</a>
+    <a href="#marketSearch">Поиск магазинов</a>
     <a href="#comparison">Сравнение</a>
     <a href="#about">О проекте</a>
   </nav>
@@ -247,6 +248,22 @@ a {color:#78b5ff}
 
   <button class="btn" onclick="saveTask()">Сохранить требования</button>
   <p class="small" id="taskStatus"></p>
+</section>
+
+<section class="section" id="marketSearch">
+  <h2>02. Поиск товаров в магазинах</h2>
+  <p class="small">Введи название товара и при желании бюджет. Откроем поиск в выбранном магазине.</p>
+  <label for="marketQuery">Что ищем?</label>
+  <input id="marketQuery" type="search" placeholder="Например: Samsung Galaxy A55">
+  <label for="marketBudget">Максимальный бюджет (₽), необязательно</label>
+  <input id="marketBudget" type="number" min="0" placeholder="30000">
+  <div class="actions">
+    <button class="btn" onclick="searchMarket('ozon')">Искать на Ozon</button>
+    <button class="btn" onclick="searchMarket('wb')">Искать на Wildberries</button>
+    <button class="btn" onclick="searchMarket('ym')">Искать на Яндекс Маркете</button>
+    <button class="btn" onclick="searchMarket('dns')">Искать в DNS</button>
+  </div>
+  <p class="small" id="marketStatus">Поиск откроется на сайте магазина. Цены и наличие проверяй у продавца.</p>
 </section>
 
 <section class="section" id="products">
@@ -331,6 +348,38 @@ let taskData = {
   priority:"balanced",
   requirements:""
 };
+
+function searchMarket(store) {
+  const queryInput = document.getElementById("marketQuery");
+  const budgetInput = document.getElementById("marketBudget");
+  const query = queryInput.value.trim();
+  const budget = Number(budgetInput.value);
+
+  if (!query) {
+    document.getElementById("marketStatus").textContent = "Сначала введи название товара.";
+    queryInput.focus();
+    return;
+  }
+
+  if (budgetInput.value && (!Number.isFinite(budget) || budget < 0)) {
+    document.getElementById("marketStatus").textContent = "Проверь значение бюджета.";
+    return;
+  }
+
+  const searchText = query + (budget > 0 ? " до " + budget + " рублей" : "");
+  const encoded = encodeURIComponent(searchText);
+  const urls = {
+    ozon: "https://www.ozon.ru/search/?text=" + encoded,
+    wb: "https://www.wildberries.ru/catalog/0/search.aspx?search=" + encoded,
+    ym: "https://market.yandex.ru/search?text=" + encoded,
+    dns: "https://www.dns-shop.ru/search/?q=" + encoded
+  };
+
+  if (!urls[store]) return;
+  document.getElementById("marketStatus").textContent =
+    "Открываем поиск. Проверь цену, характеристики и наличие на сайте магазина.";
+  window.open(urls[store], "_blank", "noopener,noreferrer");
+}
 
 function loadData() {
   try {
