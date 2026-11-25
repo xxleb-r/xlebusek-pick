@@ -541,7 +541,6 @@ function renderProducts() {
       <p class="small"><strong>Магазин:</strong> <span class="tag">${safeText(p.store || "Не указан")}</span></p>
       <p class="small"><strong>Ожидаемая доставка:</strong> ${p.delivery ? safeText(new Date(p.delivery + "T00:00:00").toLocaleDateString("ru-RU")) : "Дата не указана"}</p>
       <p>${safeText(p.specs)}</p>
-      ${p.link ? `<p><a href="${safeText(p.link)}" target="_blank" rel="noopener noreferrer">Открыть страницу товара ↗</a></p>` : ""}
       <p class="small"><span class="good">Плюсы:</span> ${safeText(p.pros || "Не указаны")}</p>
       <p class="small"><span class="bad">Минусы:</span> ${safeText(p.cons || "Не указаны")}</p>
       <button class="btn danger" onclick="removeProduct(${p.id})">Удалить</button>
@@ -625,7 +624,6 @@ function compareProducts() {
       <div class="product-score">${winner.score}/100 баллов</div>
       <p>Цена: ${winner.price.toLocaleString("ru-RU")} ₽</p>
       <p>Это лидер по нашей ориентировочной оценке на основе введённых данных.</p>
-      ${winner.link ? `<a href="${safeText(winner.link)}" target="_blank" rel="noopener noreferrer">Посмотреть товар ↗</a>` : ""}
     </div>
     <h3>Рейтинг товаров</h3>
   `;
